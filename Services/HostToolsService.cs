@@ -35,6 +35,7 @@
 
                     if (runAgain)
                     {
+                        var formattedText = _loggingService.DisplayHostList(hosts);
                         goto Start;
                     }
 

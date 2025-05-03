@@ -59,15 +59,19 @@
 
                 ipAddress = ipAddresses
                             .Select(x => x)
-                            .Where(u => u.Address.AddressFamily == AddressFamily.InterNetwork)
+                            .Where(u => u.Address.AddressFamily == AddressFamily.InterNetwork && u.Address.GetAddressBytes() is not null)
                             .Select(i => i.Address)
-                            .First();
+                            .FirstOrDefault();
+
+                if (ipAddress == null) break;
+
                 subnetMask = _ipManipulationService.ReturnSubnetmask(ipAddress);
                 CommonConsole.WriteToConsole($"({i}) {iface.Name}: {ipAddress} / {subnetMask} ", ConsoleColor.Green);
 
                 var bytes = ipAddress.GetAddressBytes();
                 var binarySubnetMask = String.Join(".", bytes.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')));
                 int mask = binarySubnetMask.Count(b => b == '1');
+
                 i++;
             }
 

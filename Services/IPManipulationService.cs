@@ -12,6 +12,7 @@
 
         public string ReturnSubnetmask(IPAddress ipaddress)
         {
+
             uint firstOctet = ReturnFirtsOctet(ipaddress);
             if (firstOctet >= 0 && firstOctet <= 127)
                 return "255.0.0.0";

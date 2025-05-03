@@ -61,6 +61,7 @@
                 _loggingService.DisplayPortList(openPorts);
             }
 
+            CommonConsole.WriteToConsole(CommonConsole.spacer, ConsoleColor.Yellow);
             CommonConsole.WriteToConsole($"Return to tool selection? [y/n]", ConsoleColor.Yellow);
 
             var selection = Console.ReadKey(true);
@@ -126,7 +127,7 @@
                 {
                     Console.ResetColor();
                     //CommonConsole.WriteToConsole($"Port {portInfo.PortNum} closed", ConsoleColor.Red);
-                    CommonConsole.WriteToConsole($"Something weird happened... It maybe network related", ConsoleColor.Yellow);
+                    CommonConsole.WriteToConsole($"The port maybe open but the produced socket lacks correct permissions", ConsoleColor.Yellow);
 
                 }
             }
