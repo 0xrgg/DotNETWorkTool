@@ -36,4 +36,4 @@ master: fully working features	\
 beta: experimental changes	\
 x.x.x: here be dragons	
 
-Credit to giuliocomi on Github for the arpscanner class (https://github.com/giuliocomi/arp-scanner)
+Credit to giuliocomi on Github for his example of the arpscanner class (https://github.com/giuliocomi/arp-scanner)
