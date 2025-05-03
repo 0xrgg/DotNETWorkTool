@@ -25,12 +25,6 @@ namespace DotNETworkTool.Common.Netscan
 
         }
 
-        private static string MacAddresstoString(byte[] macAdrr)
-        {
-            string macString = BitConverter.ToString(macAdrr);
-            return macString.ToUpper();
-        }
-
         private static Host LookupMAC(string ipString, Host result)
         {
             PhysicalAddress mac = Arp.Lookup(IPAddress.Parse(ipString));
