@@ -1,15 +1,12 @@
-﻿namespace DotNETworkTool.Common.HostTools
-{
-    using DotNETworkTool.Common.Config;
-    using DotNETworkTool.Common.NetworkModels;
-    using DotNETworkTool.Common.Util;
-    using DotNETworkTool.Services;
-    using System;
-    using System.Diagnostics;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Reflection;
+﻿using DotNETworkTool.Common.NetworkModels;
+using DotNETworkTool.Common.Util;
+using DotNETworkTool.Common.Config;
+using DotNETworkTool.Services.Interfaces;
+using System.Net;
+using System.Net.Sockets;
 
+namespace DotNETworkTool.Common.HostTools
+{
     public class PortScanner : HostTool
     {
         private readonly ILoggingService _loggingService;
@@ -17,20 +14,18 @@
         private List<PortInfo> openPorts;
         private List<PortInfo> targetPorts;
 
-        public readonly static string portInfoPath = Config.PORT_LIST_PATH;
+        public readonly static string portInfoPath = ToolConfig.PORT_LIST_PATH;
 
         public PortScanner(ILoggingService loggingService)
         {
             _loggingService = loggingService;
             openPorts = new List<PortInfo>();
             targetPorts = new List<PortInfo>();
-
-            this.Name = "PortScanner";
         }
 
         public bool CheckHost(string ipAddress)
         {
-            if (Config.CUSTOM_PORT_SCAN)
+            if (ToolConfig.CUSTOM_PORT_SCAN)
             {
                 CreatePortList();
             }
@@ -69,7 +64,8 @@
             if (selection.Key == ConsoleKey.Y)
             {
                 return true;
-            } else
+            }
+            else
             {
                 CommonConsole.WriteToConsole($"Exiting program...", ConsoleColor.Yellow);
                 return false;
@@ -93,9 +89,9 @@
 
         private void CreatePortList()
         {
-            if (Config.CUSTOM_PORT_SCAN && Config.CUSTOM_PORTS.Any())
+            if (ToolConfig.CUSTOM_PORT_SCAN && ToolConfig.CUSTOM_PORTS.Any())
             {
-                foreach(var port in Config.CUSTOM_PORTS)
+                foreach (var port in ToolConfig.CUSTOM_PORTS)
                 {
                     targetPorts.Add(new PortInfo { PortNum = port });
                 }
@@ -113,7 +109,8 @@
 
                 try
                 {
-                    if (!tcpClient.ConnectAsync(IPAddress.Parse(ipAddress), portInfo.PortNum).Wait(1000)) {
+                    if (!tcpClient.ConnectAsync(IPAddress.Parse(ipAddress), portInfo.PortNum).Wait(1000))
+                    {
                         CommonConsole.WriteToConsole($"Port {portInfo.PortNum} closed", ConsoleColor.Red);
                         return;
                     }
@@ -123,7 +120,7 @@
                     CommonConsole.WriteToConsole($"Port {portInfo.PortNum} open", ConsoleColor.Green);
 
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.ResetColor();
                     //CommonConsole.WriteToConsole($"Port {portInfo.PortNum} closed", ConsoleColor.Red);

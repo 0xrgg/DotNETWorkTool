@@ -1,9 +1,5 @@
 ﻿namespace DotNETworkTool.Common.Config
 {
-    using DotNETworkTool.Common.NetworkModels;
-    using System.Collections.Generic;
-    using System.Linq;
-
     public static class ConfigConverter
     {
         public static bool ConvertConfigToBool(ConfigSetting config)

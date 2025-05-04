@@ -1,7 +1,7 @@
-﻿namespace DotNETworkTool.Common.Util
-{
-    using System.Text;
+﻿using System.Text;
 
+namespace DotNETworkTool.Common.Util
+{
     public static class CommonOperations
     {
         public static byte[] ConvertStringToBytes(string str)
@@ -27,7 +27,7 @@
                 foreach (var line in File.ReadAllLines(filename))
                     list.Add(line.Trim());
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 CommonConsole.WriteToConsole("Error reading file.", ConsoleColor.Red);
 

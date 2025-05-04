@@ -1,7 +1,5 @@
 ﻿namespace DotNETworkTool.Common.Util
 {
-    using System.Security.Principal;
-
     public static class CommonConsole
     {
         // misc variables used for displaying to console
@@ -15,7 +13,7 @@
 
         public static readonly string[] PortTableHeaderMessages = { "     Port   ", "                   Service                 " };
 
-        // Used to display results - not pretty but looks okay in the console
+        // Used to display results - not pretty but looks okay in the console without resizing. 
         public static readonly string[] DeviceTableHeaderMessages = {
             "  # ",
             "       IP        ",

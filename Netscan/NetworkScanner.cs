@@ -1,22 +1,21 @@
-﻿namespace DotNETworkTool.Services
-{
-    using DotNETworkTool.Common.Config;
-    using DotNETworkTool.Common.Netscan;
-    using DotNETworkTool.Common.NetworkModels;
-    using DotNETworkTool.Common.Util;
-    using DotNETworkTool.Services.Interfaces;
-    using System.Diagnostics;
-    using System.Net;
-    using System.Net.NetworkInformation;
-    using System.Net.Sockets;
+﻿using DotNETworkTool.Common.Config;
+using DotNETworkTool.Common.Netscan;
+using DotNETworkTool.Common.NetworkModels;
+using DotNETworkTool.Common.Util;
+using System.Diagnostics;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
-    public class NetworkScanner : INetworkScanner
+namespace DotNETworkTool.Netscan
+{
+    public class NetworkScanner
     {
         private string foundInterfacesMsg = "Found {0} interfaces...",
                        findingInterfacesMsg = "Searching for network interfaces...",
                        findingNetworkHostsMsg = "Searching for hosts...",
-                       firstHost = String.Empty,
-                       lastHost = String.Empty;
+                       firstHost = string.Empty,
+                       lastHost = string.Empty;
 
         private SubnetsList _subnetList;
         private int interfaceCount;
@@ -32,12 +31,9 @@
         private List<AbstractHost> hostList = new List<AbstractHost>();
         private List<Thread> threadList = new List<Thread>();
 
-        private readonly IIPManipulationService _ipManipulationService;
-
-        public NetworkScanner(IIPManipulationService iPManipulationService)
+        public NetworkScanner()
         {
             _subnetList = new SubnetsList();
-            _ipManipulationService = iPManipulationService;
 
             ifaces = NetworkInterface.GetAllNetworkInterfaces();
             stopWatch = new Stopwatch();
@@ -65,11 +61,11 @@
 
                 if (ipAddress == null) break;
 
-                subnetMask = _ipManipulationService.ReturnSubnetmask(ipAddress);
+                subnetMask = IPManipulator.ReturnSubnetmask(ipAddress);
                 CommonConsole.WriteToConsole($"({i}) {iface.Name}: {ipAddress} / {subnetMask} ", ConsoleColor.Green);
 
                 var bytes = ipAddress.GetAddressBytes();
-                var binarySubnetMask = String.Join(".", bytes.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')));
+                var binarySubnetMask = string.Join(".", bytes.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')));
                 int mask = binarySubnetMask.Count(b => b == '1');
 
                 i++;
@@ -120,10 +116,11 @@
 
         public IEnumerable<Host> ScanNetwork(IPAddress ipAddress, string subnetMask)
         {
-            if (Config.CUSTOM_IP_SCAN)
+            if (ToolConfig.CUSTOM_IP_SCAN)
             {
                 ExecuteCustomScan();
-            } else
+            }
+            else
             {
                 ExecuteFullScan();
             }
@@ -146,7 +143,7 @@
             {
                 return Dns.GetHostEntry(host.IP);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return new IPHostEntry();
             }
@@ -165,7 +162,7 @@
             for (int i = 0; i < subnet.NumberOfHosts; i++)
             {
                 hostList.Add(new AbstractHost { IP = targetIp });
-                this.targetIp = IncrementIpAddress(targetIp.ToString());
+                targetIp = IncrementIpAddress(targetIp.ToString());
             }
 
             ThreadedPingRequest(subnet.NumberOfHosts);
@@ -175,12 +172,12 @@
 
         private void ExecuteCustomScan()
         {
-            foreach (var ip in Config.CUSTOM_IP_ADDRESSES)
+            foreach (var ip in ToolConfig.CUSTOM_IP_ADDRESSES)
             {
                 hostList.Add(new AbstractHost { IP = ip });
             }
 
-            ThreadedPingRequest(Config.CUSTOM_IP_ADDRESSES.Count());
+            ThreadedPingRequest(ToolConfig.CUSTOM_IP_ADDRESSES.Count());
         }
 
         private void ThreadedPingRequest(int loopCount)
@@ -237,7 +234,7 @@
                 }
             }
 
-            return String.Join(".", ipSplit);
+            return string.Join(".", ipSplit);
         }
 
         public bool PingHost(IPAddress targetIp)
@@ -261,7 +258,7 @@
         {
             TimeSpan ts = stopWatch.Elapsed;
 
-            string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+            string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}.{3:00}",
                 ts.Hours, ts.Minutes, ts.Seconds,
                 ts.Milliseconds / 10);
 

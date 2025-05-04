@@ -1,8 +1,8 @@
-﻿namespace DotNETworkTool.Common.Util
-{
-    using DotNETworkTool.Common.NetworkModels;
-    using System.Text;
+﻿using DotNETworkTool.Common.NetworkModels;
+using System.Text;
 
+namespace DotNETworkTool.Common.Util
+{
     public class StringTableFormatter
     {
         private static int IPMaxLength = 15;

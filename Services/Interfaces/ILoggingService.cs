@@ -1,8 +1,7 @@
-﻿namespace DotNETworkTool.Services
-{
-    using DotNETworkTool.Common.NetworkModels;
-    using System;
+﻿using DotNETworkTool.Common.NetworkModels;
 
+namespace DotNETworkTool.Services.Interfaces
+{
     public interface ILoggingService
     {
         void LogToConsole(string message, ConsoleColor color);

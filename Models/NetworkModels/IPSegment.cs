@@ -1,7 +1,7 @@
-﻿namespace DotNETworkTool.Common.NetworkModels
-{
-    using System.Globalization;
+﻿using System.Globalization;
 
+namespace DotNETworkTool.Common.NetworkModels
+{
     public class IPSegment
     {
 

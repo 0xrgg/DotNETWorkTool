@@ -1,12 +1,9 @@
-﻿namespace DotNETworkTool.Services
-{
-    using DotNETworkTool.Common.NetworkModels;
-    using DotNETworkTool.Common.Util;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
+﻿using DotNETworkTool.Common.NetworkModels;
+using DotNETworkTool.Common.Util;
+using DotNETworkTool.Services.Interfaces;
 
+namespace DotNETworkTool.Services
+{
     public class LoggingService : ILoggingService
     {
         public readonly static string configPath = $"{AppDomain.CurrentDomain.BaseDirectory}\\Logs";

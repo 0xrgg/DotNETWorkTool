@@ -1,15 +1,15 @@
 ﻿// Some code borrowed and refactored from giuliocomi @ github: https://github.com/giuliocomi/arp-scanner
 
+using ArpLookup;
+using DotNETworkTool.Common.NetworkModels;
+using DotNETworkTool.Common.Util;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+
 namespace DotNETworkTool.Common.Netscan
 {
-    using ArpLookup;
-    using DotNETworkTool.Common.NetworkModels;
-    using DotNETworkTool.Common.Util;
-    using System.Net;
-    using System.Net.NetworkInformation;
-    using System.Runtime.InteropServices;
-    using System.Text.RegularExpressions;
-
     public class ArpScan
     {
         [DllImport("iphlpapi.dll", ExactSpelling = true)]
@@ -56,7 +56,7 @@ namespace DotNETworkTool.Common.Netscan
 
             try
             {
-                foreach (var entry in Config.Config.MAC_LIST)
+                foreach (var entry in Config.ToolConfig.MAC_LIST)
                 {
                     Match found = Regex.Match(entry, pattern);
                     if (found.Success)

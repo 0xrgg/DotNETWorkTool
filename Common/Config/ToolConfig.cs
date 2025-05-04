@@ -1,16 +1,9 @@
-﻿namespace DotNETworkTool.Common.Config
-{
-    using DotNETworkTool.Common.Util;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.CompilerServices;
-    using System.Text;
-    using System.Threading.Tasks;
-    using static System.Net.Mime.MediaTypeNames;
+﻿using DotNETworkTool.Common.Util;
+using System.Reflection;
 
-    public class Config
+namespace DotNETworkTool.Common.Config
+{
+    public class ToolConfig
     {
 
         public static string Height = Console.WindowHeight.ToString();
@@ -54,7 +47,7 @@
             var LFP = RetrieveValue(ConfigSettings, "LOG_FILE_PATH");
             var MLP = RetrieveValue(ConfigSettings, "MAC_LIST_PATH");
             var PLP = RetrieveValue(ConfigSettings, "PORT_LIST_PATH");
-            var CP  = RetrieveValue(ConfigSettings, "CUSTOM_PORTS");
+            var CP = RetrieveValue(ConfigSettings, "CUSTOM_PORTS");
             var CIA = RetrieveValue(ConfigSettings, "CUSTOM_IP_ADDRESSES").PropertyValue;
 
             CUSTOM_PORT_SCAN = ConfigConverter.ConvertConfigToBool(CPS);
@@ -80,7 +73,7 @@
 
         public static void LoadMACList()
         {
-            MAC_LIST = CommonOperations.LoadListFromFile(Config.MAC_LIST_PATH);
+            MAC_LIST = CommonOperations.LoadListFromFile(ToolConfig.MAC_LIST_PATH);
         }
 
         public static ConfigSetting RetrieveValue(List<ConfigSetting> config, string propertyName)
@@ -93,7 +86,7 @@
             try
             {
                 CreateFileIfNotExists();
-                CommonOperations.LoadListFromFile(Config.ConfigPath).ForEach(x => ConfigSettings.Add(BuildSetting(x)));
+                CommonOperations.LoadListFromFile(ToolConfig.ConfigPath).ForEach(x => ConfigSettings.Add(BuildSetting(x)));
                 return true;
             }
             catch
@@ -123,7 +116,7 @@
 
         public static void CreateFileIfNotExists()
         {
-            var commonDir = $"{Config.BaseDirectory}/Common/";
+            var commonDir = $"{ToolConfig.BaseDirectory}/Common/";
             var configDir = $"{commonDir}/Config/";
 
             if (!System.IO.Directory.Exists(commonDir))
@@ -134,10 +127,10 @@
                     System.IO.Directory.CreateDirectory(configDir);
             }
 
-            if (!File.Exists(Config.ConfigPath))
+            if (!File.Exists(ToolConfig.ConfigPath))
             {
-                File.Create(Config.ConfigPath);
-                CommonOperations.WriteToFile(Config.ConfigPath, CreateConfigTemplate());
+                File.Create(ToolConfig.ConfigPath);
+                CommonOperations.WriteToFile(ToolConfig.ConfigPath, CreateConfigTemplate());
             }
 
         }

@@ -1,16 +1,11 @@
-﻿namespace DotNETworkTool.Services
+﻿using System.Net;
+
+namespace DotNETworkTool.Common.Util
 {
-    using DotNETworkTool.Services.Interfaces;
-    using System.Net;
-
-    public class IPManipulationService : IIPManipulationService
+    public static class IPManipulator
     {
-        public IPManipulationService()
-        {
 
-        }
-
-        public string ReturnSubnetmask(IPAddress ipaddress)
+        public static string ReturnSubnetmask(IPAddress ipaddress)
         {
 
             uint firstOctet = ReturnFirtsOctet(ipaddress);
@@ -23,10 +18,10 @@
             else return "0.0.0.0";
         }
 
-        public uint ReturnFirtsOctet(IPAddress ipAddress)
+        public static uint ReturnFirtsOctet(IPAddress ipAddress)
         {
             byte[] byteIP = ipAddress.GetAddressBytes();
-            uint ipInUint = (uint)byteIP[0];
+            uint ipInUint = byteIP[0];
             return ipInUint;
         }
     }

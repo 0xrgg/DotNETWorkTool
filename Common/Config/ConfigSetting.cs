@@ -1,8 +1,7 @@
-﻿namespace DotNETworkTool.Common.Config
-{
-    using FluentValidation;
-    using System.Text.RegularExpressions;
+﻿using FluentValidation;
 
+namespace DotNETworkTool.Common.Config
+{
     public class ConfigSetting
     {
         public string PropertyName { get; set; }
