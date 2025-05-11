@@ -3,6 +3,7 @@ using DotNETworkTool.Common.HostTools;
 using DotNETworkTool.Common.NetworkModels;
 using DotNETworkTool.Common.Util;
 using DotNETworkTool.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
@@ -41,8 +42,8 @@ namespace DotNETworkTool.Netscan
         Input:
             var ifaces = NetworkScanner.FindInterfaces();
 
-            CommonConsole.WriteToConsole(CommonConsole.spacer, ConsoleColor.Yellow);
-            CommonConsole.WriteToConsole("Select an interface to scan on...", ConsoleColor.Yellow);
+            CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
+            CommonConsole.Write("Select an interface to scan on...", ConsoleColor.Yellow);
 
             var input = Console.ReadLine();
 
@@ -76,30 +77,33 @@ namespace DotNETworkTool.Netscan
             var textArray = _loggingService.DisplayHostList(Hosts);
 
         LoggingPrompt:
-            CommonConsole.WriteToConsole("Write to logfile? [Y/N]", ConsoleColor.Yellow);
+            CommonConsole.Write("Write to logfile? [Y/N]", ConsoleColor.Yellow);
             var logging = Console.ReadKey(true);
 
             if (logging.Key == ConsoleKey.Y)
             {
-                CommonConsole.WriteToConsole("Writing to logfile...", ConsoleColor.Yellow);
+                CommonConsole.Write("Writing to logfile...", ConsoleColor.Yellow);
                 _loggingService.LogToFile(textArray);
+                Thread.Sleep(2000);
             }
             else if (logging.Key == ConsoleKey.N)
             {
-                CommonConsole.WriteToConsole("Skipping log file", ConsoleColor.Yellow);
+                CommonConsole.Write("Skipping log file", ConsoleColor.Yellow);
+                Thread.Sleep(2000);
             }
             else
             {
-                CommonConsole.WriteToConsole(CommonConsole.InvalidSelection, ConsoleColor.Red);
+                CommonConsole.Write(CommonConsole.InvalidSelection, ConsoleColor.Red);
                 goto LoggingPrompt;
             }
 
-            CommonConsole.WriteToConsole(CommonConsole.spacer, ConsoleColor.Yellow);
+            Console.Clear();
+            CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
         }
 
         public void InvalidSelection()
         {
-            CommonConsole.WriteToConsole("Invalid selection", ConsoleColor.Red);
+            CommonConsole.Write("Invalid selection", ConsoleColor.Red);
         }
 
         public bool ValidateInput(string input, int interfaceCount)
@@ -122,7 +126,10 @@ namespace DotNETworkTool.Netscan
             try
             {
             Start:
-                CommonConsole.WriteToConsole($"Continue to tool selection? [y/n]", ConsoleColor.Yellow);
+                Console.Clear();
+                var formattedText = _loggingService.DisplayHostList(Hosts);
+
+                CommonConsole.Write($"Continue to port scan? [y/n]", ConsoleColor.Yellow);
                 var selection = Console.ReadKey(true);
 
                 if (selection.Key == ConsoleKey.Y)
@@ -133,21 +140,25 @@ namespace DotNETworkTool.Netscan
 
                     if (runAgain)
                     {
-                        var formattedText = _loggingService.DisplayHostList(Hosts);
+                        formattedText = _loggingService.DisplayHostList(Hosts);
                         goto Start;
                     }
 
                 }
-                else
+                else if (selection.Key == ConsoleKey.N)
                 {
-                    CommonConsole.WriteToConsole("Exiting program...", ConsoleColor.Yellow);
+                    CommonConsole.Write("Exiting program...", ConsoleColor.Yellow);
                     Environment.Exit(0);
+                } else
+                {
+                    CommonConsole.Write("Invalid selection...", ConsoleColor.Red);
+                    goto Start;
                 }
 
             }
             catch (Exception e)
             {
-                CommonConsole.WriteToConsole("Error loading custom config...", ConsoleColor.Red);
+                CommonConsole.Write("Error loading custom config...", ConsoleColor.Red);
                 throw e;
             }
 
@@ -155,10 +166,17 @@ namespace DotNETworkTool.Netscan
 
         private Host HostSelect(IEnumerable<Host> hosts)
         {
-            CommonConsole.WriteToConsole($"Select a host [1 - {hosts.Count()}] ", ConsoleColor.Yellow);
+            Select:
+            CommonConsole.Write($"Select a host [1 - {hosts.Count()}] ", ConsoleColor.Yellow);
             var selectedHost = int.Parse(Console.ReadLine()) - 1;
 
-            CommonConsole.WriteToConsole($"Selected: {hosts.ElementAt(selectedHost).IP}", ConsoleColor.Yellow);
+            if (selectedHost > hosts.Count() ||  selectedHost < 0)
+            {
+                CommonConsole.Write("Invalid selection, try again..", ConsoleColor.Red);
+                goto Select;
+            }
+
+            CommonConsole.Write($"Selected: {hosts.ElementAt(selectedHost).IP}", ConsoleColor.Yellow);
 
             return hosts.ElementAt(selectedHost);
         }

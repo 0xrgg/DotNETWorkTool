@@ -39,7 +39,7 @@ namespace DotNETworkTool.Common.Config
 
             ConfigSettings = new List<ConfigSetting>();
 
-            CommonConsole.WriteToConsole("Loading config...", ConsoleColor.Yellow);
+            CommonConsole.Write("Loading config...", ConsoleColor.Yellow);
 
             LoadConfigFile();
             var CPS = RetrieveValue(ConfigSettings, "CUSTOM_PORT_SCAN");
@@ -91,7 +91,7 @@ namespace DotNETworkTool.Common.Config
             }
             catch
             {
-                CommonConsole.WriteToConsole("Error loading config file...", ConsoleColor.Red);
+                CommonConsole.Write("Error loading config file...", ConsoleColor.Red);
                 Environment.Exit(-1);
                 return false;
             }

@@ -11,8 +11,7 @@ namespace DotNETworkTool.Netscan
 {
     public class NetworkScanner
     {
-        private string foundInterfacesMsg = "Found {0} interfaces...",
-                       findingInterfacesMsg = "Searching for network interfaces...",
+        private string findingInterfacesMsg = "Searching for network interfaces...",
                        findingNetworkHostsMsg = "Searching for hosts...",
                        firstHost = string.Empty,
                        lastHost = string.Empty;
@@ -35,7 +34,9 @@ namespace DotNETworkTool.Netscan
         {
             _subnetList = new SubnetsList();
 
-            ifaces = NetworkInterface.GetAllNetworkInterfaces();
+            ifaces = NetworkInterface.GetAllNetworkInterfaces()
+                .Where(x => x.GetIPProperties().UnicastAddresses.Any(y => y.Address.GetAddressBytes() is not null))
+                .ToArray();
             stopWatch = new Stopwatch();
         }
 
@@ -43,9 +44,9 @@ namespace DotNETworkTool.Netscan
         {
             interfaceCount = ifaces.Count();
 
-            CommonConsole.WriteToConsole(findingInterfacesMsg, ConsoleColor.Yellow);
-            CommonConsole.WriteToConsole(foundInterfacesMsg.Replace("{0}", interfaceCount.ToString()), ConsoleColor.Yellow);
-            CommonConsole.WriteToConsole(CommonConsole.spacer, ConsoleColor.Yellow);
+            CommonConsole.Write(findingInterfacesMsg, ConsoleColor.Yellow);
+            CommonConsole.Write($"Found {interfaceCount.ToString()} interfaces...", ConsoleColor.Yellow);
+            CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
 
             int i = 1;
 
@@ -62,7 +63,7 @@ namespace DotNETworkTool.Netscan
                 if (ipAddress == null) break;
 
                 subnetMask = IPManipulator.ReturnSubnetmask(ipAddress);
-                CommonConsole.WriteToConsole($"({i}) {iface.Name}: {ipAddress} / {subnetMask} ", ConsoleColor.Green);
+                CommonConsole.Write($"({i}) {iface.Name}: {ipAddress} / {subnetMask} ", ConsoleColor.Green);
 
                 var bytes = ipAddress.GetAddressBytes();
                 var binarySubnetMask = string.Join(".", bytes.Select(b => Convert.ToString(b, 2).PadLeft(8, '0')));
@@ -78,7 +79,7 @@ namespace DotNETworkTool.Netscan
         {
             stopWatch.Start();
 
-            CommonConsole.WriteToConsole(findingNetworkHostsMsg, ConsoleColor.Yellow);
+            CommonConsole.Write(findingNetworkHostsMsg, ConsoleColor.Yellow);
 
             subnetMask = ScanInterfaces(userInput);
             var hosts = ScanNetwork(ipAddress, subnetMask.ToString());
@@ -104,7 +105,7 @@ namespace DotNETworkTool.Netscan
                             .Select(i => i.Address)
                             .First();
 
-                CommonConsole.WriteToConsole($"Selected: {iface.Name} on {ipAddress}/{ipv4Mask} ", ConsoleColor.Green);
+                CommonConsole.Write($"Selected: {iface.Name} on {ipAddress}/{ipv4Mask} ", ConsoleColor.Green);
 
                 return ipv4Mask.ToString();
             }
@@ -129,9 +130,9 @@ namespace DotNETworkTool.Netscan
 
             var elapsedTime = FormatStopwatch();
 
-            CommonConsole.WriteToConsole($"{CommonConsole.spacer}", ConsoleColor.Yellow);
-            CommonConsole.WriteToConsole($"Found {ActiveHosts.Count()} hosts...", ConsoleColor.Green);
-            CommonConsole.WriteToConsole($"Scan completed in: {elapsedTime}", ConsoleColor.Green);
+            CommonConsole.Write($"{CommonConsole.spacer}", ConsoleColor.Yellow);
+            CommonConsole.Write($"Found {ActiveHosts.Count()} hosts...", ConsoleColor.Green);
+            CommonConsole.Write($"Scan completed in: {elapsedTime}", ConsoleColor.Green);
 
             return ActiveHosts;
 
@@ -208,7 +209,7 @@ namespace DotNETworkTool.Netscan
                 var targetHost = hostList.Select(x => x).Where(x => x.PingAttempted is false).First();
                 targetIp = targetHost.IP.ToString();
                 hostList.Remove(targetHost);
-                CommonConsole.WriteToConsole($"Trying host: {targetIp}", ConsoleColor.Yellow);
+                CommonConsole.Write($"Trying host: {targetIp}", ConsoleColor.Yellow);
 
                 var result = PingHost(IPAddress.Parse(targetIp));
             }
@@ -245,7 +246,7 @@ namespace DotNETworkTool.Netscan
 
             if (host.MAC is not null)
             {
-                CommonConsole.WriteToConsole($"Found host: {host.IP}", ConsoleColor.Green);
+                CommonConsole.Write($"Found host: {host.IP}", ConsoleColor.Green);
                 host.HostName = QueryDNS(host).HostName ?? "Unknown";
                 ActiveHosts.Add(host);
                 return true;

@@ -67,7 +67,7 @@ namespace DotNETworkTool.Common.Netscan
             }
             catch (Exception e)
             {
-                CommonConsole.WriteToConsole(e.ToString(), ConsoleColor.Red);
+                CommonConsole.Write(e.ToString(), ConsoleColor.Red);
             }
             return "Unknown";
         }
@@ -82,7 +82,7 @@ namespace DotNETworkTool.Common.Netscan
             }
             catch (Exception e)
             {
-                CommonConsole.WriteToConsole(e.ToString(), ConsoleColor.Red);
+                CommonConsole.Write(e.ToString(), ConsoleColor.Red);
             }
 
             return result;

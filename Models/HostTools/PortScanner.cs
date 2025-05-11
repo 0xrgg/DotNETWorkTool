@@ -49,15 +49,15 @@ namespace DotNETworkTool.Common.HostTools
             threadList.WaitAll();
             threadList.Clear();
 
-            CommonConsole.WriteToConsole($"Found {openPorts.Count} open ports [{ipAddress}]", ConsoleColor.Green);
+            CommonConsole.Write($"Found {openPorts.Count} open ports [{ipAddress}]", ConsoleColor.Green);
 
             if (openPorts.Any())
             {
                 _loggingService.DisplayPortList(openPorts);
             }
 
-            CommonConsole.WriteToConsole(CommonConsole.spacer, ConsoleColor.Yellow);
-            CommonConsole.WriteToConsole($"Return to tool selection? [y/n]", ConsoleColor.Yellow);
+            CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
+            CommonConsole.Write($"Return to tool selection? [y/n]", ConsoleColor.Yellow);
 
             var selection = Console.ReadKey(true);
 
@@ -67,7 +67,7 @@ namespace DotNETworkTool.Common.HostTools
             }
             else
             {
-                CommonConsole.WriteToConsole($"Exiting program...", ConsoleColor.Yellow);
+                CommonConsole.Write($"Exiting program...", ConsoleColor.Yellow);
                 return false;
             }
 
@@ -105,30 +105,29 @@ namespace DotNETworkTool.Common.HostTools
             if (targetPorts.Any(x => !x.Attempted))
             {
                 using TcpClient tcpClient = new TcpClient();
-                CommonConsole.WriteToConsole($"Trying port {portInfo.PortNum}", ConsoleColor.Yellow);
+                CommonConsole.Write($"Trying port {portInfo.PortNum}", ConsoleColor.Yellow);
 
                 try
                 {
                     if (!tcpClient.ConnectAsync(IPAddress.Parse(ipAddress), portInfo.PortNum).Wait(1000))
                     {
-                        CommonConsole.WriteToConsole($"Port {portInfo.PortNum} closed", ConsoleColor.Red);
+                        CommonConsole.Write($"Port {portInfo.PortNum} closed", ConsoleColor.Red);
                         return;
                     }
 
                     openPorts.Add(portInfo);
 
-                    CommonConsole.WriteToConsole($"Port {portInfo.PortNum} open", ConsoleColor.Green);
+                    CommonConsole.Write($"Port {portInfo.PortNum} open", ConsoleColor.Green);
 
                 }
                 catch (Exception)
                 {
                     Console.ResetColor();
                     //CommonConsole.WriteToConsole($"Port {portInfo.PortNum} closed", ConsoleColor.Red);
-                    CommonConsole.WriteToConsole($"The port maybe open but the produced socket lacks correct permissions", ConsoleColor.Yellow);
+                    CommonConsole.Write($"The port maybe open but the produced socket lacks correct permissions", ConsoleColor.Yellow);
 
                 }
             }
-
         }
     }
 }

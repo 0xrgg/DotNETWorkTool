@@ -22,17 +22,10 @@
             "             Hostname             "
         };
 
-        public static void WriteToConsole(string message, ConsoleColor color)
+        public static void Write(string message, ConsoleColor color)
         {
-            Console.ResetColor();
             Console.ForegroundColor = color;
             Console.WriteLine(message);
-            Console.ResetColor();
-        }
-
-        public static bool ValidateUserInput(string input)
-        {
-            return input.ToLower().Contains("y") || input.ToLower().Contains("n");
         }
     }
 }

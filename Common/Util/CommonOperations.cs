@@ -29,7 +29,7 @@ namespace DotNETworkTool.Common.Util
             }
             catch (Exception)
             {
-                CommonConsole.WriteToConsole("Error reading file.", ConsoleColor.Red);
+                CommonConsole.Write("Error reading file.", ConsoleColor.Red);
 
                 return new List<string>();
             }

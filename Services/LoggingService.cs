@@ -16,7 +16,7 @@ namespace DotNETworkTool.Services
 
         public void LogToConsole(string message, ConsoleColor color)
         {
-            CommonConsole.WriteToConsole(message, color);
+            CommonConsole.Write(message, color);
         }
 
         public void LogToFile(string[] textArray)
@@ -47,9 +47,9 @@ namespace DotNETworkTool.Services
 
         public string[] DisplayHostList(IEnumerable<Host> hosts)
         {
-            CommonConsole.WriteToConsole(CommonConsole.spacer, ConsoleColor.Yellow);
+            CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
 
-            CommonConsole.WriteToConsole(CommonConsole.TableHeader, ConsoleColor.Red);
+            CommonConsole.Write(CommonConsole.TableHeader, ConsoleColor.Red);
 
             var formattedTextArray = new string[hosts.Count()];
 
@@ -66,28 +66,28 @@ namespace DotNETworkTool.Services
                         paddedHost.Vendor,
                         paddedHost.HostName);
 
-                CommonConsole.WriteToConsole(formattedText, ConsoleColor.Red);
+                CommonConsole.Write(formattedText, ConsoleColor.Red);
 
                 formattedTextArray[i] = formattedText;
 
             }
 
-            CommonConsole.WriteToConsole(CommonConsole.spacer, ConsoleColor.Yellow);
+            CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
 
             return formattedTextArray;
         }
 
         public void DisplayPortList(List<PortInfo> openPorts)
         {
-            CommonConsole.WriteToConsole(CommonConsole.spacer, ConsoleColor.Yellow);
+            CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
 
             var formattedText = String.Format("|{0} | {1} |", CommonConsole.PortTableHeaderMessages[0], CommonConsole.PortTableHeaderMessages[1]);
-            CommonConsole.WriteToConsole(formattedText, ConsoleColor.Yellow);
+            CommonConsole.Write(formattedText, ConsoleColor.Yellow);
 
             foreach (var port in openPorts)
             {
                 var textString = String.Format("| {0,-11} | {1,-43} |", port.PortNum, port.PortName);
-                CommonConsole.WriteToConsole(textString, ConsoleColor.Yellow);
+                CommonConsole.Write(textString, ConsoleColor.Yellow);
             }
 
         }

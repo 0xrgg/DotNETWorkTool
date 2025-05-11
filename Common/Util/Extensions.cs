@@ -13,10 +13,4 @@
             }
         }
     }
-
-    public static class ListExtension
-    {
-
-    }
-
 }
