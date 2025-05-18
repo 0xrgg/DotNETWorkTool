@@ -23,7 +23,7 @@ namespace DotNETworkTool.Common.HostTools
             targetPorts = new List<PortInfo>();
         }
 
-        public bool CheckHost(string ipAddress)
+        public IEnumerable<PortInfo> CheckHost(string ipAddress)
         {
             if (ToolConfig.CUSTOM_PORT_SCAN)
             {
@@ -49,27 +49,7 @@ namespace DotNETworkTool.Common.HostTools
             threadList.WaitAll();
             threadList.Clear();
 
-            CommonConsole.Write($"Found {openPorts.Count} open ports [{ipAddress}]", ConsoleColor.Green);
-
-            if (openPorts.Any())
-            {
-                _loggingService.DisplayPortList(openPorts);
-            }
-
-            CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
-            CommonConsole.Write($"Return to tool selection? [y/n]", ConsoleColor.Yellow);
-
-            var selection = Console.ReadKey(true);
-
-            if (selection.Key == ConsoleKey.Y)
-            {
-                return true;
-            }
-            else
-            {
-                CommonConsole.Write($"Exiting program...", ConsoleColor.Yellow);
-                return false;
-            }
+            return openPorts;
 
         }
 
@@ -122,10 +102,7 @@ namespace DotNETworkTool.Common.HostTools
                 }
                 catch (Exception)
                 {
-                    Console.ResetColor();
-                    //CommonConsole.WriteToConsole($"Port {portInfo.PortNum} closed", ConsoleColor.Red);
                     CommonConsole.Write($"The port maybe open but the produced socket lacks correct permissions", ConsoleColor.Yellow);
-
                 }
             }
         }

@@ -19,7 +19,7 @@ CUSTOM_PORTS - A space or comma separated list of integers eg. 1 2 80 8008 \
 CUSTOM_IP_ADDRESSES - A space or comma separated list of IP addresses
 
 Pre-requisites/installation instructions \
-- For Linux when cloning you will need the dotnet runtime and sdk (6.0). Build the project in the root directory.
+- For Linux when cloning you will need the dotnet runtime and sdk (9.0). Build the project in the root directory.
 
 Disclaimer \
 Do not use this tool on any unauthorized networks. It is intended for discovery and network auditing.
@@ -30,10 +30,5 @@ To do:  \
 [-] Host specific tools (check for open ports etc)  \
 [ ] Enhance scanning tools   \
 [ ] ?	
-
-Branch note:	\
-master: fully working features	\
-beta: experimental changes	\
-x.x.x: here be dragons	
 
 Credit to giuliocomi on Github for his example of the arpscanner class (https://github.com/giuliocomi/arp-scanner)

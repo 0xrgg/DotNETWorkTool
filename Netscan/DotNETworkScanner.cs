@@ -4,6 +4,7 @@ using DotNETworkTool.Common.NetworkModels;
 using DotNETworkTool.Common.Util;
 using DotNETworkTool.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
@@ -22,20 +23,54 @@ namespace DotNETworkTool.Netscan
 
         public DotNETworkScanner(ILoggingService loggingService)
         {
+            _loggingService = loggingService;
+
             NetworkScanner = new NetworkScanner();
             PortScanner = new PortScanner(loggingService);
-            _loggingService = loggingService;
         }
 
         public void StartApp()
         {
+            var result = new ScanResult();
+
             ToolConfig.BuildConfig();
-            RunPhase1();
-            LoggingPrompt();
-            RunPhase2();
+            var hostList = RunHostScan();
+
+            DisplayHostsAndLogPrompt();
+
+            CommonConsole.Write("Perform full scan or simple scan? [F/S]", ConsoleColor.Yellow);
+            var response = Console.ReadKey(true);
+
+            if (response.Key == ConsoleKey.F)
+            {
+                foreach(var host in hostList)
+                {
+                    var openPorts = PortScanner.CheckHost(host.IP);
+
+                    CommonConsole.Write($"Found {openPorts.Count()} open ports for host {host.IP}", ConsoleColor.Green);
+
+                    result.HostScanResult.Add(new HostScanResult() { Host = host, PortInfo = openPorts });
+                }
+
+                CommonConsole.Write("Port scan complete... \r\n", ConsoleColor.Yellow);
+
+                foreach(var host in result.HostScanResult)
+                {
+                    if (host.PortInfo.Any())
+                    {
+                        CommonConsole.Write($"Ports open @ {host.Host.IP}", ConsoleColor.Yellow);
+                        _loggingService.DisplayPortList(host.PortInfo.ToList());
+                        CommonConsole.Write("\r\n", ConsoleColor.Yellow);
+                    }
+                }
+
+            } else
+            {
+                var portList = RunPortScan();
+            }
         }
 
-        public void RunPhase1()
+        public IEnumerable<Host> RunHostScan()
         {
             Hosts = Enumerable.Empty<Host>();
 
@@ -56,6 +91,7 @@ namespace DotNETworkTool.Netscan
             else
             {
                 Hosts = NetworkScanner.StartScan(input);
+                return Hosts;
             }
         }
 
@@ -72,7 +108,7 @@ namespace DotNETworkTool.Netscan
             return false;
         }
 
-        private void LoggingPrompt()
+        private void DisplayHostsAndLogPrompt()
         {
             var textArray = _loggingService.DisplayHostList(Hosts);
 
@@ -121,8 +157,10 @@ namespace DotNETworkTool.Netscan
             }
         }
 
-        private void RunPhase2()
+        private IEnumerable<PortInfo> RunPortScan()
         {
+            var portList = Enumerable.Empty<PortInfo>();
+
             try
             {
             Start:
@@ -136,14 +174,22 @@ namespace DotNETworkTool.Netscan
                 {
                     var selectedHost = HostSelect(Hosts);
 
-                    var runAgain = PortScanner.CheckHost(selectedHost.IP);
+                    portList = PortScanner.CheckHost(selectedHost.IP);
 
-                    if (runAgain)
+                    CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
+                    CommonConsole.Write($"Return to tool selection? [y/n]", ConsoleColor.Yellow);
+
+                    selection = Console.ReadKey(true);
+
+                    if (selection.Key == ConsoleKey.Y)
                     {
-                        formattedText = _loggingService.DisplayHostList(Hosts);
                         goto Start;
                     }
-
+                    else
+                    {
+                        CommonConsole.Write($"Exiting program...", ConsoleColor.Yellow);
+                        Environment.Exit(0);
+                    }
                 }
                 else if (selection.Key == ConsoleKey.N)
                 {
@@ -161,6 +207,8 @@ namespace DotNETworkTool.Netscan
                 CommonConsole.Write("Error loading custom config...", ConsoleColor.Red);
                 throw e;
             }
+
+            return portList;
 
         }
 
@@ -180,5 +228,16 @@ namespace DotNETworkTool.Netscan
 
             return hosts.ElementAt(selectedHost);
         }
+    }
+
+    public class HostScanResult
+    {
+        public Host Host { get; set; }
+        public IEnumerable<PortInfo> PortInfo { get; set; }
+    }
+
+    public class ScanResult
+    {
+        public List<HostScanResult> HostScanResult { get; set; } = new();
     }
 }
