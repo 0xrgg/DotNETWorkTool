@@ -9,16 +9,13 @@ namespace DotNETworkTool.Common.HostTools
 {
     public class PortScanner : HostTool
     {
-        private readonly ILoggingService _loggingService;
-
         private List<PortInfo> openPorts;
         private List<PortInfo> targetPorts;
 
         public readonly static string portInfoPath = ToolConfig.PORT_LIST_PATH;
 
-        public PortScanner(ILoggingService loggingService)
+        public PortScanner()
         {
-            _loggingService = loggingService;
             openPorts = new List<PortInfo>();
             targetPorts = new List<PortInfo>();
         }

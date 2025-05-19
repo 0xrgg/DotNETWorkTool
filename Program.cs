@@ -9,12 +9,12 @@ internal class Program
     private static void Main(string[] args)
     {
         var serviceProvider = new ServiceCollection()
-            .AddSingleton<ILoggingService, LoggingService>()
+            //.AddSingleton<ILoggingService, LoggingService>()
             .BuildServiceProvider();
 
-        var loggingService = serviceProvider.GetService<ILoggingService>();
+        //var loggingService = serviceProvider.GetService<ILoggingService>();
 
-        var radar = new DotNETworkScanner(loggingService);
+        var radar = new DotNETworkScanner();
         radar.StartApp();
     }
 }

@@ -4,22 +4,17 @@ using DotNETworkTool.Services.Interfaces;
 
 namespace DotNETworkTool.Services
 {
-    public class LoggingService : ILoggingService
+    public static class LoggingService
     {
         public readonly static string configPath = $"{AppDomain.CurrentDomain.BaseDirectory}\\Logs";
         public readonly static string logPath = $"{configPath}\\NetworkScanLog_{DateTime.UtcNow.ToString("dMMyyyyHHmmss")}.txt";
 
-        public LoggingService()
-        {
-            CommonConsole.TableHeader = $"{CommonConsole.DeviceTableHeaderMessages[0]}|{CommonConsole.DeviceTableHeaderMessages[1]}|{CommonConsole.DeviceTableHeaderMessages[2]}|{CommonConsole.DeviceTableHeaderMessages[3]}|{CommonConsole.DeviceTableHeaderMessages[4]}|";
-        }
-
-        public void LogToConsole(string message, ConsoleColor color)
+        public static void LogToConsole(string message, ConsoleColor color)
         {
             CommonConsole.Write(message, color);
         }
 
-        public void LogToFile(string[] textArray)
+        public static void LogToFile(string[] textArray)
         {
             if (!Directory.Exists(configPath))
             {
@@ -45,7 +40,7 @@ namespace DotNETworkTool.Services
             }
         }
 
-        public string[] DisplayHostList(IEnumerable<Host> hosts)
+        public static string[] DisplayHostList(IEnumerable<Host> hosts)
         {
             CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
 
@@ -77,7 +72,7 @@ namespace DotNETworkTool.Services
             return formattedTextArray;
         }
 
-        public void DisplayPortList(List<PortInfo> openPorts)
+        public static void DisplayPortList(List<PortInfo> openPorts)
         {
             CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
 

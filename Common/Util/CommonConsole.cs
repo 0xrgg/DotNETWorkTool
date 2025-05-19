@@ -22,6 +22,11 @@
             "             Hostname             "
         };
 
+        public static void CreateTableHeaders()
+        {
+            TableHeader = $"{CommonConsole.DeviceTableHeaderMessages[0]}|{CommonConsole.DeviceTableHeaderMessages[1]}|{CommonConsole.DeviceTableHeaderMessages[2]}|{CommonConsole.DeviceTableHeaderMessages[3]}|{CommonConsole.DeviceTableHeaderMessages[4]}|";
+        }
+
         public static void Write(string message, ConsoleColor color)
         {
             Console.ForegroundColor = color;
