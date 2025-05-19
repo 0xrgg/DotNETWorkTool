@@ -1,10 +1,8 @@
 ﻿using DotNETworkTool.Common.NetworkModels;
-using DotNETworkTool.Common.Util;
-using DotNETworkTool.Services.Interfaces;
 
-namespace DotNETworkTool.Services
+namespace DotNETworkTool.Common.Util
 {
-    public static class LoggingService
+    public static class Logger
     {
         public readonly static string configPath = $"{AppDomain.CurrentDomain.BaseDirectory}\\Logs";
         public readonly static string logPath = $"{configPath}\\NetworkScanLog_{DateTime.UtcNow.ToString("dMMyyyyHHmmss")}.txt";
@@ -53,7 +51,7 @@ namespace DotNETworkTool.Services
                 var host = hosts.Select(x => new Host() { HostName = x.HostName, MAC = x.MAC, IP = x.IP, Vendor = x.Vendor }).ElementAt(i);
                 var paddedHost = StringTableFormatter.PadPropertiesForDisplay(host, CommonConsole.DeviceTableHeaderMessages[4]);
 
-                var formattedText = String.Format(
+                var formattedText = string.Format(
                         "{0,3} |{1}| {2,5} |{3}| {4} |",
                         i + 1,
                         paddedHost.IP,
@@ -76,12 +74,12 @@ namespace DotNETworkTool.Services
         {
             CommonConsole.Write(CommonConsole.spacer, ConsoleColor.Yellow);
 
-            var formattedText = String.Format("|{0} | {1} |", CommonConsole.PortTableHeaderMessages[0], CommonConsole.PortTableHeaderMessages[1]);
+            var formattedText = string.Format("|{0} | {1} |", CommonConsole.PortTableHeaderMessages[0], CommonConsole.PortTableHeaderMessages[1]);
             CommonConsole.Write(formattedText, ConsoleColor.Yellow);
 
             foreach (var port in openPorts)
             {
-                var textString = String.Format("| {0,-11} | {1,-43} |", port.PortNum, port.PortName);
+                var textString = string.Format("| {0,-11} | {1,-43} |", port.PortNum, port.PortName);
                 CommonConsole.Write(textString, ConsoleColor.Yellow);
             }
 

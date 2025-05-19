@@ -2,10 +2,6 @@
 using DotNETworkTool.Common.HostTools;
 using DotNETworkTool.Common.NetworkModels;
 using DotNETworkTool.Common.Util;
-using DotNETworkTool.Services;
-using DotNETworkTool.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc.Filters;
-using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
@@ -58,7 +54,7 @@ namespace DotNETworkTool.Netscan
                     if (host.PortInfo.Any())
                     {
                         CommonConsole.Write($"Ports open @ {host.Host.IP}", ConsoleColor.Yellow);
-                        LoggingService.DisplayPortList(host.PortInfo.ToList());
+                        Logger.DisplayPortList(host.PortInfo.ToList());
                         CommonConsole.Write("\r\n", ConsoleColor.Yellow);
                     }
                 }
@@ -109,7 +105,7 @@ namespace DotNETworkTool.Netscan
 
         private void DisplayHostsAndLogPrompt()
         {
-            var textArray = LoggingService.DisplayHostList(Hosts);
+            var textArray = Logger.DisplayHostList(Hosts);
 
         LoggingPrompt:
             CommonConsole.Write("Write to logfile? [Y/N]", ConsoleColor.Yellow);
@@ -118,7 +114,7 @@ namespace DotNETworkTool.Netscan
             if (logging.Key == ConsoleKey.Y)
             {
                 CommonConsole.Write("Writing to logfile...", ConsoleColor.Yellow);
-                LoggingService.LogToFile(textArray);
+                Logger.LogToFile(textArray);
                 Thread.Sleep(2000);
             }
             else if (logging.Key == ConsoleKey.N)
@@ -164,7 +160,7 @@ namespace DotNETworkTool.Netscan
             {
             Start:
                 Console.Clear();
-                var formattedText = LoggingService.DisplayHostList(Hosts);
+                var formattedText = Logger.DisplayHostList(Hosts);
 
                 CommonConsole.Write($"Continue to port scan? [y/n]", ConsoleColor.Yellow);
                 var selection = Console.ReadKey(true);
